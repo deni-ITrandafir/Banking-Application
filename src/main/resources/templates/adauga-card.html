@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaugă Card</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav {
+            background: linear-gradient(135deg, #8B4513, #DAA520);
+            color: white;
+            padding: 20px;
+            width: 250px;
+            height: 100vh;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        nav h1 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        nav a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        nav a:hover {
+            background-color: #DAA520;
+        }
+        .form-container {
+            margin: auto;
+            max-width: 400px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-container select, .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <h1>DDE BANK</h1>
+    <a href="/carduri">Carduri</a>
+    <a href="/transfera-bani">Transferă Bani</a>
+    <a href="/istoric-tranzactii">Istoric Tranzacții</a>
+    <a href="/contul-meu">Contul Meu</a>
+    <a href="/logout">Logout</a>
+</nav>
+
+<div class="form-container">
+    <h1>Adaugă Card</h1>
+    <form action="/carduri/adauga" method="post">
+        <label for="tipCard">Tip Card:</label>
+        <select name="tipCard" id="tipCard" required>
+            <!-- Opțiunile vor fi populate din JavaScript -->
+        </select>
+        <label for="moneda">Monedă:</label>
+        <select name="moneda" id="moneda" required>
+            <!-- Opțiunile vor fi populate din JavaScript -->
+        </select>
+
+        <label for="pin">PIN:</label>
+        <input type="password" name="pin" id="pin" placeholder="Introdu PIN-ul" required>
+        <button type="submit">Adaugă Card</button>
+    </form>
+</div>
+
+<script>
+    // Funcție pentru a popula câmpul Tip Card
+    async function populateTipCard() {
+        const response = await fetch('/carduri/api/tipuri-card');
+        if (response.ok) {
+            const tipuriCard = await response.json();
+            const tipCardSelect = document.getElementById('tipCard');
+            tipuriCard.forEach(tip => {
+                const option = document.createElement('option');
+                option.value = tip;
+                option.textContent = tip.charAt(0).toUpperCase() + tip.slice(1).toLowerCase();
+                tipCardSelect.appendChild(option);
+            });
+        } else {
+            console.error('Eroare la obținerea tipurilor de card!');
+        }
+    }
+
+    // Funcție pentru a popula câmpul Monedă
+    async function populateMonede() {
+        const response = await fetch('/carduri/api/monede');
+        if (response.ok) {
+            const monede = await response.json();
+            const monedaSelect = document.getElementById('moneda');
+            monede.forEach(moneda => {
+                const option = document.createElement('option');
+                option.value = moneda;
+                option.textContent = moneda.charAt(0).toUpperCase() + moneda.slice(1).toLowerCase();
+                monedaSelect.appendChild(option);
+            });
+        } else {
+            console.error('Eroare la obținerea monedelor!');
+        }
+    }
+
+    // Apelarea funcțiilor pentru a popula câmpurile la încărcarea paginii
+    document.addEventListener('DOMContentLoaded', () => {
+        populateTipCard();
+        populateMonede();
+    });
+</script>
+
+</body>
+</html>

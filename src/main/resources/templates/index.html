@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        nav {
+            background: linear-gradient(135deg, #8B4513, #DAA520);
+            color: white;
+            padding: 20px;
+            width: 250px;
+            height: 100vh;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        nav h1 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        nav a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        nav a:hover {
+            background-color: #DAA520;
+        }
+        main {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #f4f4f9;
+            overflow-y: auto;
+        }
+        main h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>DDE BANK</h1>
+    <a href="/carduri">Carduri</a>
+    <a href="/transfera-bani">Transferă Bani</a>
+    <a href="/istoric-tranzactii">Istoric Tranzacții</a>
+    <a href="/contul-meu">Contul Meu</a>
+    <a href="/logout">Logout</a>
+</nav>
+<main>
+    <h2>Bun venit pe pagina principală!</h2>
+    <p>Alege o acțiune din meniul din stânga pentru a continua.</p>
+</main>
+</body>
+</html>

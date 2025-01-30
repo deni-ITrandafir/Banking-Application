@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contul Meu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        nav {
+            background: linear-gradient(135deg, #8B4513, #DAA520);
+            color: white;
+            padding: 20px;
+            width: 250px;
+            height: 100vh;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        nav h1 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        nav a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        nav a:hover {
+            background-color: #DAA520;
+        }
+        main {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #f4f4f9;
+            overflow-y: auto;
+        }
+        main h2 {
+            color: #333;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding-left: 30px;
+            padding-right: 30px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h1 {
+            text-align: center;
+        }
+
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-container input, .form-container select {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>DDE BANK</h1>
+    <a href="/carduri">Carduri</a>
+    <a href="/transfera-bani">Transferă Bani</a>
+    <a href="/istoric-tranzactii">Istoric Tranzacții</a>
+    <a href="/contul-meu">Contul Meu</a>
+    <a href="/logout">Logout</a>
+</nav>
+<main>
+
+
+<div class="form-container">
+    <h1>Contul Meu</h1>
+
+    <form id="profilForm" th:action="@{/contul-meu}" th:object="${utilizator}" method="post" onsubmit="return handleValidation(event)">
+        <label for="nume">Nume:</label>
+        <input type="text" id="nume" th:field="*{nume}" required>
+
+        <label for="prenume">Prenume:</label>
+        <input type="text" id="prenume" th:field="*{prenume}" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}" required>
+
+        <label for="telefon">Telefon:</label>
+        <input type="text" id="telefon" th:field="*{telefon}" oninput="validatePhone()" required>
+        <small id="phoneFeedback" style="color: red;"></small>
+
+        <label for="oras">Oraș:</label>
+        <input type="text" id="oras" th:field="*{oras}">
+
+        <label for="judet">Județ:</label>
+        <input type="text" id="judet" th:field="*{judet}">
+
+        <label for="strada">Strada:</label>
+        <input type="text" id="strada" th:field="*{strada}">
+
+        <label for="numar">Număr:</label>
+        <input type="text" id="numar" th:field="*{numar}">
+
+        <label for="cnp">CNP:</label>
+        <input type="text" id="cnp" th:field="*{cnp}" oninput="validateCNP()" required>
+        <small id="cnpFeedback" style="color: red;"></small>
+
+        <label for="dataNasterii">Data Nașterii:</label>
+        <input type="date" id="dataNasterii" th:field="*{dataNasterii}" required>
+
+        <label for="gen">Gen:</label>
+        <select id="gen" th:field="*{gen}">
+            <option value="masculin" th:selected="*{gen == 'masculin'}">Masculin</option>
+            <option value="feminin" th:selected="*{gen == 'feminin'}">Feminin</option>
+        </select>
+
+        <label for="parolaNoua">Parolă nouă:</label>
+        <input type="password" id="parolaNoua" name="parolaNoua" placeholder="Introduceți o parolă nouă (opțional)" oninput="validatePassword()">
+        <small id="passwordFeedback" style="color: red;"></small>
+
+        <button type="submit">Salvează</button>
+    </form>
+
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Validare telefon
+    function validatePhone() {
+        const phone = document.getElementById('telefon').value;
+        const feedback = document.getElementById('phoneFeedback');
+
+        if (/^\d{10}$/.test(phone)) {
+            feedback.textContent = ''; // Valid
+        } else {
+            feedback.textContent = 'Telefonul trebuie să conțină exact 10 cifre.';
+        }
+    }
+
+    // Validare CNP
+    function validateCNP() {
+        const cnp = document.getElementById('cnp').value;
+        const feedback = document.getElementById('cnpFeedback');
+
+        if (/^\d{13}$/.test(cnp)) {
+            feedback.textContent = ''; // Valid
+        } else {
+            feedback.textContent = 'CNP-ul trebuie să conțină exact 13 cifre.';
+        }
+    }
+
+    // Validare parolă nouă
+    function validatePassword() {
+        const password = document.getElementById('parolaNoua').value;
+        const feedback = document.getElementById('passwordFeedback');
+
+        const conditions = [];
+        if (password.length < 8) {
+            conditions.push('minim 8 caractere');
+        }
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            conditions.push('cel puțin un caracter special');
+        }
+        if (!/[0-9]/.test(password)) {
+            conditions.push('cel puțin o cifră');
+        }
+
+        if (conditions.length === 0 || password === '') {
+            feedback.textContent = ''; // Valid sau câmp gol
+        } else {
+            feedback.textContent = 'Parola trebuie să conțină: ' + conditions.join(', ');
+        }
+    }
+
+    // Validare generală la submit
+    function handleValidation(event) {
+        // Revalidează toate câmpurile
+        validatePhone();
+        validateCNP();
+        validatePassword();
+
+        // Verifică dacă există erori
+        const phoneFeedback = document.getElementById('phoneFeedback').textContent;
+        const cnpFeedback = document.getElementById('cnpFeedback').textContent;
+        const passwordFeedback = document.getElementById('passwordFeedback').textContent;
+
+        if (phoneFeedback || cnpFeedback || passwordFeedback) {
+            Swal.fire({
+                title: 'Eroare!',
+                text: 'Te rugăm să corectezi câmpurile marcate.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return false; // Oprește submiterea formularului dacă există erori
+        }
+
+        // Permite submiterea dacă toate câmpurile sunt valide
+        showSuccessAlert(); // Afișează alertă de succes după submit
+        return true;
+    }
+
+
+    // Funcție pentru afișarea alertei de eroare
+    function showErrorAlert() {
+        Swal.fire({
+            title: 'Eroare!',
+            text: 'Nu s-au putut realiza modificările. Te rugăm să încerci din nou.',
+            icon: 'error',
+            timer: 5000, // Afișează notificarea timp de 5 secunde
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+    }
+
+
+    // Verificăm dacă parametrul `success` este în URL
+    if (window.location.search.includes('success')) {
+        // Afișăm notificarea de succes
+        Swal.fire({
+            title: 'Succes!',
+            text: 'Modificările au fost realizate cu succes!',
+            icon: 'success',
+            timer: 3000, // Afișează timp de 5 secunde
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+
+        // După 5 secunde, redirecționăm utilizatorul
+        setTimeout(() => {
+            window.location.href = '/index'; // Schimbă "/altă-pagină" cu adresa dorită
+        }, 3000);
+    }
+</script>
+
+</body>
+</html>

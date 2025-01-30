@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>Carduri</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            background-color: #f4f4f9;
+        }
+
+        nav {
+            background: linear-gradient(135deg, #8B4513, #DAA520);
+            color: white;
+            padding: 20px;
+            width: 250px;
+            height: 100vh;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            margin-right: 70px;
+        }
+
+        nav h1 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        nav a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        nav a:hover {
+            background-color: #DAA520;
+        }
+
+        .content {
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            width: 350px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .card p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .card-actions form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 5px;
+        }
+
+        .card-actions form input {
+            width: 80px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .card-actions form button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        .card-actions .icon-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            width: 35px;
+            height: 35px;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .card-actions .icon-container:hover {
+            transform: scale(1.1);
+        }
+
+        .card-actions .icon-container svg {
+            width: 20px;
+            height: 20px;
+            color: #007BFF;
+        }
+
+        .card-actions h6 {
+            margin: 0;
+            font-size: 0.8em;
+            color: white;
+            text-align: center;
+        }
+
+        .delete-btn {
+            background-color: red;
+            color: white;
+            width: 80px;
+            font-size: 0.8em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+        .add-card button {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .add-card button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .add-card button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+
+<nav>
+    <h1>DDE BANK</h1>
+    <a href="/carduri">Carduri</a>
+    <a href="/transfera-bani">Transferă Bani</a>
+    <a href="/istoric-tranzactii">Istoric Tranzacții</a>
+    <a href="/contul-meu">Contul Meu</a>
+    <a href="/logout">Logout</a>
+</nav>
+
+<div class="content">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Cardurile Mele</h1>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+        <form action="/carduri/cauta" method="get" style="display: flex; align-items: center; flex-direction: column;">
+            <div style="display: flex; align-items: center;">
+                <input type="text" name="numarCard" placeholder="Caută după număr card" required
+                       style="padding: 8px; border: 1px solid #ccc; border-radius: 20px 0 0 20px; margin-right: -3px;"/>
+                <button type="submit"
+                        style="padding: 8px 12px; background: linear-gradient(45deg, #FFD700, #FFA500); color: white; border: none; border-radius: 0 20px 20px 0; cursor: pointer;">
+                    Caută
+                </button>
+            </div>
+            <div th:if="${error}" style="color: red; text-align: center; margin-top: 10px;">
+                <p th:text="${error}"></p>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="add-card">
+        <form action="/carduri/adauga" method="get">
+            <button type="submit">Adaugă Card Nou</button>
+        </form>
+    </div>
+    <div class="card-container">
+        <!-- Afișare carduri -->
+        <div th:each="card : ${carduri}" class="card">
+            <h3 th:text="'Numar Card: ' + ${card.numarCard}"></h3>
+            <p th:text="'CVV: ' + ${card.cvv}"></p>
+            <p th:text="'IBAN: ' + ${card.iban}"></p>
+            <p th:text="'Sold: ' + ${card.sold} + ' ' + ${card.moneda}"></p>
+            <div class="card-actions">
+                <form th:action="@{/carduri/adauga-bani/{id}(id=${card.idCard})}" method="post">
+                    <input type="number" name="suma" placeholder="Suma" required>
+                    <button type="submit">
+                        <div class="icon-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </div>
+                    </button>
+                    <h6>Adaugă</h6>
+                </form>
+                <form th:action="@{/carduri/retrage-bani/{id}(id=${card.idCard})}" method="post">
+                    <input type="number" name="suma" placeholder="Suma" required>
+                    <button type="submit">
+                        <div class="icon-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </div>
+                    </button>
+                    <h6>Retrage</h6>
+                </form>
+                <form id="resetPinForm-${card.idCard}" th:action="@{/carduri/reseteaza-pin/{id}(id=${card.idCard})}" method="post">
+                    <input type="text" id="newPin-${card.idCard}" name="pin" placeholder="PIN Nou" required>
+                    <button type="button" class="reset-pin-button" data-card-id="${card.idCard}">
+                        <div class="icon-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                        </div>
+                    </button>
+                    <h6>Resetează</h6>
+                </form>
+                <form id="deleteForm-${card.idCard}" th:action="@{/carduri/sterge/{id}(id=${card.idCard})}" method="post">
+                    <button type="button"
+                            class="delete-button"
+                            data-card-id="${card.idCard}"
+                            style="margin-top:20px; background-color: red; color: white; width: 40px;
+                    font-size: 0.8em; border: none; border-radius: 6px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width:25px;" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Add event listener to all delete buttons
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const cardId = button.getAttribute('data-card-id');
+                Swal.fire({
+                    title: 'Ești sigur?',
+                    text: "Această acțiune nu poate fi anulată!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Da, șterge!',
+                    cancelButtonText: 'Nu'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit the form associated with the card ID
+                        document.getElementById(`deleteForm-${cardId}`).submit();
+                    }
+                });
+            });
+        });
+    });
+
+
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Add event listener to reset PIN buttons
+        document.querySelectorAll('.reset-pin-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const cardId = button.getAttribute('data-card-id');
+                const newPinInput = document.getElementById(`newPin-${cardId}`);
+                const newPin = newPinInput.value;
+
+                if (!newPin) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Eroare',
+                        text: 'Te rog introdu un PIN nou înainte de a continua!'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Ești sigur?',
+                    text: "Această acțiune va reseta PIN-ul!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Da, resetează!',
+                    cancelButtonText: 'Nu'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit the form to reset the PIN
+                        document.getElementById(`resetPinForm-${cardId}`).submit();
+
+                        // Show success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Succes',
+                            text: 'PIN resetat cu succes!',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+
+</body>
+</html>
