@@ -15,6 +15,4 @@ KEY FEATURES
 
 ✔️ Search & Filter – Quickly find specific cards using a search bar.
 
-✔️ Admin Features – Manage users, approve transactions, and monitor platform activity.
-
 ✔️ Interactive Feedback – Uses pop-up notifications (SweetAlert) for transaction confirmations and alerts.
