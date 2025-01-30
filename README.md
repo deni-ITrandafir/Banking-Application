@@ -1,8 +1,9 @@
-Overview
+OVERVIEW
 
 DDEBANK is a secure and user-friendly online banking application designed to simplify financial management. Built with Spring Boot and MySQL, it allows users to manage their bank cards, perform transactions, and track their financial history efficiently. The system ensures high security through validations, real-time notifications, and strict authentication mechanisms.
 
-Key Features
+
+KEY FEATURES
 
 ✔️ Bank Card Management – View all registered cards with details (card number, CVV, IBAN, balance, currency), add/remove funds, and modify PIN codes.
 
